@@ -1,0 +1,276 @@
+ttmt@ttmt-VirtualBox:~$ mkdir ~/myapp && cd ~/myapp
+docker run --name laravel -v ${PWD}/my-project:/app bitnami/laravel:latest
+docker: permission denied while trying to connect to the Docker daemon socket at unix:///var/run/docker.sock: Post "http://%2Fvar%2Frun%2Fdocker.sock/v1.24/containers/create?name=laravel": dial unix /var/run/docker.sock: connect: permission denied.
+See 'docker run --help'.
+ttmt@ttmt-VirtualBox:~/myapp$ mkdir ~/myapp && cd ~/myapp
+mkdir: cannot create directory ‘/home/ttmt/myapp’: File exists
+ttmt@ttmt-VirtualBox:~/myapp$ mkdir ~/myapp 
+mkdir: cannot create directory ‘/home/ttmt/myapp’: File exists
+ttmt@ttmt-VirtualBox:~/myapp$ docker run --name laravel -v ${PWD}/my-project:/app bitnami/laravel:latest
+docker: permission denied while trying to connect to the Docker daemon socket at unix:///var/run/docker.sock: Post "http://%2Fvar%2Frun%2Fdocker.sock/v1.24/containers/create?name=laravel": dial unix /var/run/docker.sock: connect: permission denied.
+See 'docker run --help'.
+ttmt@ttmt-VirtualBox:~/myapp$ sudo   docker run --name laravel -v ${PWD}/my-project:/app bitnami/laravel:latest
+[sudo] password for ttmt: 
+Unable to find image 'bitnami/laravel:latest' locally
+latest: Pulling from bitnami/laravel
+e9a31fe197d1: Pull complete 
+Digest: sha256:3f79948f2f1e4b97ac2ca483be8a46abfc859f0f66d4a326415948e672bc2634
+Status: Downloaded newer image for bitnami/laravel:latest
+laravel 04:03:31.92 INFO  ==> 
+laravel 04:03:31.92 INFO  ==> Welcome to the Bitnami laravel container
+laravel 04:03:31.92 INFO  ==> Subscribe to project updates by watching https://github.com/bitnami/containers
+laravel 04:03:31.92 INFO  ==> Submit issues and feature requests at https://github.com/bitnami/containers/issues
+laravel 04:03:31.93 INFO  ==> Upgrade to Tanzu Application Catalog for production environments to access custom-configured and pre-packaged software components. Gain enhanced features, including Software Bill of Materials (SBOM), CVE scan result reports, and VEX documents. To learn more, visit https://bitnami.com/enterprise
+laravel 04:03:31.93 INFO  ==> 
+laravel 04:03:31.93 INFO  ==> ** Running Laravel setup **
+laravel 04:03:31.94 INFO  ==> Configuring PHP options
+laravel 04:03:31.95 INFO  ==> Setting PHP opcache.enable option
+laravel 04:03:31.96 INFO  ==> Setting PHP expose_php option
+laravel 04:03:31.97 INFO  ==> Setting PHP output_buffering option
+laravel 04:03:31.99 INFO  ==> Validating settings in LARAVEL_* environment variables...
+laravel 04:03:32.05 WARN  ==> Hostname mariadb could not be resolved, this could lead to connection issues
+laravel 04:03:32.05 INFO  ==> Creating Laravel application in /app
+laravel 04:03:32.30 INFO  ==> Regenerating APP_KEY
+laravel 04:03:32.42 Updating dependencies
+laravel 04:03:47.48 INFO  ==> Trying to connect to the database server
+^Z^Cqq
+exit
+laravel 04:04:47.78 ERROR ==> Could not connect to the database
+
+
+
+
+
+
+
+
+
+
+
+tmt@ttmt-VirtualBox:~/myapp$ sudo docker pull bitnami/laravel
+[sudo] password for ttmt: 
+Using default tag: latest
+latest: Pulling from bitnami/laravel
+Digest: sha256:3f79948f2f1e4b97ac2ca483be8a46abfc859f0f66d4a326415948e672bc2634
+Status: Image is up to date for bitnami/laravel:latest
+docker.io/bitnami/laravel:latest
+ttmt@ttmt-VirtualBox:~/myapp$ sudo docker ps
+CONTAINER ID   IMAGE                  COMMAND                  CREATED          STATUS          PORTS      NAMES
+6064137e8af7   bitnami/mysql:latest   "/opt/bitnami/script…"   5 minutes ago    Up 5 minutes    3306/tcp   mysql
+b32d4519197b   busybox:1.24.0         "sh"                     42 minutes ago   Up 42 minutes              upbeat_bhaskara
+ttmt@ttmt-VirtualBox:~/myapp$ ^M
+: command not found
+ttmt@ttmt-VirtualBox:~/myapp$ 
+ttmt@ttmt-VirtualBox:~/myapp$ sudo docker network create laravel-network
+05c74fff5b3708a0427fc1a4f841e3b2284122fd6087a8f25ca22500cc1c5e7c
+ttmt@ttmt-VirtualBox:~/myapp$ sudo  docker volume create --name mariadb_data
+mariadb_data
+ttmt@ttmt-VirtualBox:~/myapp$ sudo docker run -d --name mariadb \
+  --env ALLOW_EMPTY_PASSWORD=yes \
+  --env MARIADB_USER=bn_myapp \
+  --env MARIADB_DATABASE=bitnami_myapp \
+  --network laravel-network \
+  --volume mariadb_data:/bitnami/mariadb \
+  bitnami/mariadb:latest
+Unable to find image 'bitnami/mariadb:latest' locally
+latest: Pulling from bitnami/mariadb
+7dba5ff422e8: Pull complete 
+Digest: sha256:59596249022770454fb7a252a8140b79ff849ba9ed6a0182928fab3ceed15f61
+Status: Downloaded newer image for bitnami/mariadb:latest
+2b92e57670931411cbdf753606fbda3d8df22c94a245c9651db75f81a2d36dff
+ttmt@ttmt-VirtualBox:~/myapp$ sudo $ docker run -d --name laravel \
+  -p 8000:8000 \
+  --env DB_HOST=mariadb \
+  --env DB_PORT=3306 \
+  --env DB_USERNAME=bn_myapp \
+  --env DB_DATABASE=bitnami_myapp \
+  --network laravel-network \
+  --volume ${PWD}/my-project:/app \
+  bitnami/laravel:latest
+sudo: $: command not found
+ttmt@ttmt-VirtualBox:~/myapp$ sudo  docker run -d --name laravel   -p 8000:8000   --env DB_HOST=mariadb   --env DB_PORT=3306   --env DB_USERNAME=bn_myapp   --env DB_DATABASE=bitnami_myapp   --network laravel-network   --volume ${PWD}/my-project:/app   bitnami/laravel:latest
+docker: Error response from daemon: Conflict. The container name "/laravel" is already in use by container "cc022fb5a45a476d40791d340c104cecfbdbcdab82c35191b3590a3ca58845b3". You have to remove (or rename) that container to be able to reuse that name.
+See 'docker run --help'.
+ttmt@ttmt-VirtualBox:~/myapp$ sudo docker run -d --name laravel \
+  -p 8000:8000 \
+  --env DB_HOST=mariadb \
+  --env DB_PORT=3306 \
+  --env DB_USERNAME=bn_myapp \
+  --env DB_DATABASE=bitnami_myapp \
+  --network laravel-network \
+  --volume ${PWD}/my-project:/app \
+  bitnami/laravel:latest
+docker: Error response from daemon: Conflict. The container name "/laravel" is already in use by container "cc022fb5a45a476d40791d340c104cecfbdbcdab82c35191b3590a3ca58845b3". You have to remove (or rename) that container to be able to reuse that name.
+See 'docker run --help'.
+ttmt@ttmt-VirtualBox:~/myapp$ sudo docker run -d --name myproject    -p 8000:8000   --env DB_HOST=mariadb   --env DB_PORT=3306   --env DB_USERNAME=bn_myapp   --env DB_DATABASE=bitnami_myapp   --network laravel-network   --volume ${PWD}/my-project:/app   bitnami/laravel:latest
+2dc071b45602d3a5d05ef80c86aaf727e1947ed021a32a2581fa9641ea8f02ed
+ttmt@ttmt-VirtualBox:~/myapp$ sudo docker run -d --name myproject \   -p 8000:8000   --env DB_HOST=mariadb   --env DB_PORT=3306   --env DB_USERNAME=bn_myapp   --env DB_DATABASE=bitnami_myapp   --network laravel-network   --volume ${PWD}/my-project:/app   bitnami/laravel:latest
+docker: invalid reference format.
+See 'docker run --help'.
+ttmt@ttmt-VirtualBox:~/myapp$ sudo docker run -d --name myproject\   -p 8000:8000   --env DB_HOST=mariadb   --env DB_PORT=3306   --env DB_USERNAME=bn_myapp   --env DB_DATABASE=bitnami_myapp   --network laravel-network   --volume ${PWD}/my-project:/app   bitnami/laravel:latest
+docker: Error response from daemon: Invalid container name (myproject ), only [a-zA-Z0-9][a-zA-Z0-9_.-] are allowed.
+See 'docker run --help'.
+ttmt@ttmt-VirtualBox:~/myapp$ sudo docker run -d --name my-projectproject \
+  -p 8000:8000 \
+  --env DB_HOST=mariadb \
+  --env DB_PORT=3306 \
+  --env DB_USERNAME=bn_myapp \
+  --env DB_DATABASE=bitnami_myapp \
+  --network laravel-network \
+  --volume ${PWD}/my-project:/app \
+  bitnami/laravel:latest
+916bcbe6ccde3fae591a7494ed2532ffb1695a8969dfaa067005084ba1cfc141
+docker: Error response from daemon: driver failed programming external connectivity on endpoint my-projectproject (b5685da8e0045fdce6e08a44ea8201d7dcd5d5cee8433d0ea82714c0bdaa94a2): Bind for 0.0.0.0:8000 failed: port is already allocated.
+ttmt@ttmt-VirtualBox:~/myapp$ sudo docker run -d --name my-project \
+  -p 8000:8000 \
+  --env DB_HOST=mariadb \
+  --env DB_PORT=3306 \
+  --env DB_USERNAME=bn_myapp \
+  --env DB_DATABASE=bitnami_myapp \
+  --network laravel-network \
+  --volume ${PWD}/my-project:/app \
+  bitnami/laravel:latest
+e7bd3682bd7b937864384cb2a2ae3ff1df2fe64a692d560b88d8d3010229a74e
+docker: Error response from daemon: driver failed programming external connectivity on endpoint my-project (8cd9ea4e9acd5b6324e05fb967cb5cc939b7551a674f624112e8ec8d317070c2): Bind for 0.0.0.0:8000 failed: port is already allocated.
+ttmt@ttmt-VirtualBox:~/myapp$ sudo docker ps
+CONTAINER ID   IMAGE                    COMMAND                  CREATED          STATUS          PORTS                                                 NAMES
+2dc071b45602   bitnami/laravel:latest   "/opt/bitnami/script…"   3 minutes ago    Up 3 minutes    3000/tcp, 0.0.0.0:8000->8000/tcp, :::8000->8000/tcp   myproject
+2b92e5767093   bitnami/mariadb:latest   "/opt/bitnami/script…"   5 minutes ago    Up 5 minutes    3306/tcp                                              mariadb
+6064137e8af7   bitnami/mysql:latest     "/opt/bitnami/script…"   14 minutes ago   Up 14 minutes   3306/tcp                                              mysql
+b32d4519197b   busybox:1.24.0           "sh"                     51 minutes ago   Up 51 minutes                                                         upbeat_bhaskara
+ttmt@ttmt-VirtualBox:~/myapp$ cd myproject
+bash: cd: myproject: No such file or directory
+ttmt@ttmt-VirtualBox:~/myapp$ ls -l
+total 4
+drwxr-xr-x 13 ttmt ttmt 4096 Nov 21 11:03 my-project
+ttmt@ttmt-VirtualBox:~/myapp$ 
+ttmt@ttmt-VirtualBox:~/myapp$ cd my-project
+ttmt@ttmt-VirtualBox:~/myapp/my-project$ php artisan cache:clear
+Composer detected issues in your platform:
+
+Your Composer dependencies require a PHP version ">= 8.2.0". You are running 8.0.30.
+
+PHP Fatal error:  Composer detected issues in your platform: Your Composer dependencies require a PHP version ">= 8.2.0". You are running 8.0.30. in /home/ttmt/myapp/my-project/vendor/composer/platform_check.php on line 24
+ttmt@ttmt-VirtualBox:~/myapp/my-project$ ls 
+app            composer.lock  package.json       README.md  tailwind.config.js
+artisan        config         phpunit.xml        resources  tests
+bootstrap      database       postcss.config.js  routes     vendor
+composer.json  licenses       public             storage    vite.config.js
+ttmt@ttmt-VirtualBox:~/myapp/my-project$ cd ..
+ttmt@ttmt-VirtualBox:~/myapp$ php artisan cache:clear
+Could not open input file: artisan
+ttmt@ttmt-VirtualBox:~/myapp$ cd my-project
+ttmt@ttmt-VirtualBox:~/myapp/my-project$ sudo docker images
+REPOSITORY        TAG             IMAGE ID       CREATED        SIZE
+bitnami/laravel   latest          8e32e40c0783   30 hours ago   904MB
+bitnami/mariadb   latest          1b79cab0fb6f   11 days ago    433MB
+bitnami/mysql     latest          fad797209a66   11 days ago    743MB
+busybox           1-uclibc        3d2904141741   7 weeks ago    1.23MB
+busybox           1               517b897a6a83   7 weeks ago    4.27MB
+busybox           1-glibc         517b897a6a83   7 weeks ago    4.27MB
+busybox           1-musl          7a13970f0904   7 weeks ago    1.45MB
+jitesoft/sqlite   latest          5aaee12984c8   4 years ago    7.57MB
+busybox           1.24            47bcc53f74dc   8 years ago    1.11MB
+busybox           1.24-uclibc     47bcc53f74dc   8 years ago    1.11MB
+busybox           1.24-musl       f8bba50164e1   8 years ago    1.2MB
+busybox           1.24-glibc      54df49495ae4   8 years ago    4.18MB
+busybox           1.24.1          8b17efa7e876   8 years ago    1.11MB
+busybox           1.24.1-glibc    bd9cd091f6e9   8 years ago    4.18MB
+busybox           1-ubuntu        d34ea343a882   8 years ago    4.35MB
+busybox           1.21-ubuntu     d34ea343a882   8 years ago    4.35MB
+busybox           1.21.0-ubuntu   d34ea343a882   8 years ago    4.35MB
+busybox           1.24.0          e4a4ff8a080d   9 years ago    1.11MB
+busybox           1.23            a84c36ecc374   9 years ago    1.1MB
+busybox           1.23.2          a84c36ecc374   9 years ago    1.1MB
+ttmt@ttmt-VirtualBox:~/myapp/my-project$ sudo docker ps
+CONTAINER ID   IMAGE                    COMMAND                  CREATED          STATUS          PORTS                                                 NAMES
+2dc071b45602   bitnami/laravel:latest   "/opt/bitnami/script…"   7 minutes ago    Up 7 minutes    3000/tcp, 0.0.0.0:8000->8000/tcp, :::8000->8000/tcp   myproject
+2b92e5767093   bitnami/mariadb:latest   "/opt/bitnami/script…"   9 minutes ago    Up 9 minutes    3306/tcp                                              mariadb
+6064137e8af7   bitnami/mysql:latest     "/opt/bitnami/script…"   18 minutes ago   Up 18 minutes   3306/tcp                                              mysql
+b32d4519197b   busybox:1.24.0           "sh"                     55 minutes ago   Up 55 minutes                                                         upbeat_bhaskara
+ttmt@ttmt-VirtualBox:~/myapp/my-project$ ls
+app            composer.lock  package.json       README.md  tailwind.config.js
+artisan        config         phpunit.xml        resources  tests
+bootstrap      database       postcss.config.js  routes     vendor
+composer.json  licenses       public             storage    vite.config.js
+ttmt@ttmt-VirtualBox:~/myapp/my-project$ cd ...
+bash: cd: ...: No such file or directory
+ttmt@ttmt-VirtualBox:~/myapp/my-project$ cd ..
+ttmt@ttmt-VirtualBox:~/myapp$ cd myproject
+bash: cd: myproject: No such file or directory
+ttmt@ttmt-VirtualBox:~/myapp$ ls 
+my-project
+ttmt@ttmt-VirtualBox:~/myapp$ sudo rm my-project
+rm: cannot remove 'my-project': Is a directory
+ttmt@ttmt-VirtualBox:~/myapp$ sudo apt rm my-project
+E: Invalid operation rm
+ttmt@ttmt-VirtualBox:~/myapp$ sudo rm mkdir my-project
+rm: cannot remove 'mkdir': No such file or directory
+rm: cannot remove 'my-project': Is a directory
+ttmt@ttmt-VirtualBox:~/myapp$ sudo rm -r my-project
+ttmt@ttmt-VirtualBox:~/myapp$ ls
+ttmt@ttmt-VirtualBox:~/myapp$ sudo docker run -d --name my-project \
+  -p 8000:8000 \
+  --env DB_HOST=mariadb \
+  --env DB_PORT=3306 \
+  --env DB_USERNAME=bn_myapp \
+  --env DB_DATABASE=bitnami_myapp \
+  --network laravel-network \
+  --volume ${PWD}/my-project:/app \
+  bitnami/laravel:latest
+docker: Error response from daemon: Conflict. The container name "/my-project" is already in use by container "e7bd3682bd7b937864384cb2a2ae3ff1df2fe64a692d560b88d8d3010229a74e". You have to remove (or rename) that container to be able to reuse that name.
+See 'docker run --help'.
+ttmt@ttmt-VirtualBox:~/myapp$ sudo docker ps
+CONTAINER ID   IMAGE                    COMMAND                  CREATED          STATUS          PORTS      NAMES
+2b92e5767093   bitnami/mariadb:latest   "/opt/bitnami/script…"   12 minutes ago   Up 12 minutes   3306/tcp   mariadb
+6064137e8af7   bitnami/mysql:latest     "/opt/bitnami/script…"   21 minutes ago   Up 21 minutes   3306/tcp   mysql
+b32d4519197b   busybox:1.24.0           "sh"                     58 minutes ago   Up 58 minutes              upbeat_bhaskara
+ttmt@ttmt-VirtualBox:~/myapp$ sudo docker stop my-project
+my-project
+ttmt@ttmt-VirtualBox:~/myapp$ sudo docker rm my-project
+my-project
+ttmt@ttmt-VirtualBox:~/myapp$ sudo docker ps -a
+CONTAINER ID   IMAGE                    COMMAND                  CREATED             STATUS                            PORTS      NAMES
+916bcbe6ccde   bitnami/laravel:latest   "/opt/bitnami/script…"   8 minutes ago       Created                                      my-projectproject
+2dc071b45602   bitnami/laravel:latest   "/opt/bitnami/script…"   10 minutes ago      Exited (255) About a minute ago              myproject
+2b92e5767093   bitnami/mariadb:latest   "/opt/bitnami/script…"   12 minutes ago      Up 12 minutes                     3306/tcp   mariadb
+6064137e8af7   bitnami/mysql:latest     "/opt/bitnami/script…"   21 minutes ago      Up 21 minutes                     3306/tcp   mysql
+cc022fb5a45a   bitnami/laravel:latest   "/opt/bitnami/script…"   33 minutes ago      Exited (1) 32 minutes ago                    laravel
+b32d4519197b   busybox:1.24.0           "sh"                     59 minutes ago      Up 59 minutes                                upbeat_bhaskara
+2059b502916a   busybox:1.24.0           "sh"                     About an hour ago   Exited (0) 59 minutes ago                    dazzling_tharp
+e95c4dea6355   busybox:1.24.0           "sh"                     About an hour ago   Exited (127) About an hour ago               beautiful_dubinsky
+ttmt@ttmt-VirtualBox:~/myapp$ sudo docker stop my-projectproject
+my-projectproject
+ttmt@ttmt-VirtualBox:~/myapp$ sudo docker rm my-projectproject
+my-projectproject
+ttmt@ttmt-VirtualBox:~/myapp$ sudo docker stop myproject
+myproject
+ttmt@ttmt-VirtualBox:~/myapp$ sudo docker rm myproject
+myproject
+ttmt@ttmt-VirtualBox:~/myapp$ sudo docker ps -a
+CONTAINER ID   IMAGE                    COMMAND                  CREATED             STATUS                           PORTS      NAMES
+2b92e5767093   bitnami/mariadb:latest   "/opt/bitnami/script…"   13 minutes ago      Up 13 minutes                    3306/tcp   mariadb
+6064137e8af7   bitnami/mysql:latest     "/opt/bitnami/script…"   22 minutes ago      Up 22 minutes                    3306/tcp   mysql
+cc022fb5a45a   bitnami/laravel:latest   "/opt/bitnami/script…"   34 minutes ago      Exited (1) 32 minutes ago                   laravel
+b32d4519197b   busybox:1.24.0           "sh"                     59 minutes ago      Up 59 minutes                               upbeat_bhaskara
+2059b502916a   busybox:1.24.0           "sh"                     About an hour ago   Exited (0) About an hour ago                dazzling_tharp
+e95c4dea6355   busybox:1.24.0           "sh"                     About an hour ago   Exited (127) About an hour ago              beautiful_dubinsky
+ttmt@ttmt-VirtualBox:~/myapp$ sudo docker run -d --name my-project \
+  -p 8000:8000 \
+  --env DB_HOST=mariadb \
+  --env DB_PORT=3306 \
+  --env DB_USERNAME=bn_myapp \
+  --env DB_DATABASE=bitnami_myapp \
+  --network laravel-network \
+  --volume ${PWD}/my-project:/app \
+  bitnami/laravel:latest
+eabc81b205c0d1f30920e2aee74a056c654f2f573975aca564e6a480327241c4
+ttmt@ttmt-VirtualBox:~/myapp$ sudo docker ps -a
+CONTAINER ID   IMAGE                    COMMAND                  CREATED             STATUS                           PORTS                                                 NAMES
+eabc81b205c0   bitnami/laravel:latest   "/opt/bitnami/script…"   15 seconds ago      Up 15 seconds                    3000/tcp, 0.0.0.0:8000->8000/tcp, :::8000->8000/tcp   my-project
+2b92e5767093   bitnami/mariadb:latest   "/opt/bitnami/script…"   14 minutes ago      Up 14 minutes                    3306/tcp                                              mariadb
+6064137e8af7   bitnami/mysql:latest     "/opt/bitnami/script…"   23 minutes ago      Up 23 minutes                    3306/tcp                                              mysql
+cc022fb5a45a   bitnami/laravel:latest   "/opt/bitnami/script…"   34 minutes ago      Exited (1) 33 minutes ago                                                              laravel
+b32d4519197b   busybox:1.24.0           "sh"                     About an hour ago   Up About an hour                                                                       upbeat_bhaskara
+2059b502916a   busybox:1.24.0           "sh"                     About an hour ago   Exited (0) About an hour ago                                                           dazzling_tharp
+e95c4dea6355   busybox:1.24.0           "sh"                     About an hour ago   Exited (127) About an hour ago                                                         beautiful_dubinsky
